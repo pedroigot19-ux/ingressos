@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Entrada do Evento</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .caixa {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="caixa">
+
+    <h1>🎟️ Entrada do Evento</h1>
+
+    <p>Digite o código do ingresso:</p>
+
+    <input type="text" id="codigo" placeholder="Ex: ING001">
+
+    <br>
+
+    <button onclick="validarIngresso()">
+        Validar ingresso
+    </button>
+
+    <div id="resultado"></div>
+
+</div>
+
+<script>
+
+const ingressos = {
+    "ING001": "Aline Vieira Fernandes",
+    "ING002": "Anna Paula Halfed Duarte",
+    "ING003": "Bruna dos Santos de Jesus",
+    "ING004": "Emanuelly Garcia de Assis",
+    "ING005": "Gabriel Cestari Amorim",
+    "ING006": "João Pedro Rainha Pá",
+    "ING007": "Jullyanna Pereira da Silva Mauricio",
+    "ING008": "Kesia Mendes Marçal Alves",
+    "ING009": "Leandro Mota Teixeira",
+    "ING010": "Ludmila Cardoso Bento Perfeito",
+    "ING011": "Marcelo Rocha Ramalhete",
+    "ING012": "Natan Batalha Sevarolli",
+    "ING013": "Nayane Pereira de Souza",
+    "ING014": "Thays da Silva Souza",
+    "ING015": "Yhago da Silva Candal"
+};
+
+function validarIngresso() {
+
+    const codigo = document
+        .getElementById("codigo")
+        .value
+        .trim()
+        .toUpperCase();
+
+    const resultado = document.getElementById("resultado");
+
+    if (ingressos[codigo]) {
+
+        resultado.innerHTML =
+            "✅ ENTRADA VÁLIDA!<br><br>" +
+            "🎉 Bem-vindo(a), " +
+            ingressos[codigo] +
+            "!<br><br>" +
+            "🎟️ Ingresso: " +
+            codigo;
+
+    } else {
+
+        resultado.innerHTML =
+            "❌ INGRESSO INVÁLIDO!";
+    }
+}
+
+</script>
+
+</body>
+</html>

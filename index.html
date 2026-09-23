@@ -47,7 +47,19 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+
+const SUPABASE_URL = "https://itloqxijliwxxrzxudnh.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY = "COLE_SUA_CHAVE_AQUI";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
 
 const ingressos = {
     "ING001": "Aline Vieira Fernandes",
@@ -67,36 +79,11 @@ const ingressos = {
     "ING015": "Yhago da Silva Candal"
 };
 
-function verificarIngresso() {
+
+async function verificarIngresso() {
 
     const parametros = new URLSearchParams(window.location.search);
 
     const codigo = parametros.get("codigo");
 
-    const resultado = document.getElementById("resultado");
-
-    if (codigo && ingressos[codigo.toUpperCase()]) {
-
-        const codigoFinal = codigo.toUpperCase();
-
-        resultado.innerHTML =
-            "✅ CÓDIGO VÁLIDO!<br><br>" +
-            "🎉 Bem-vindo(a), " +
-            ingressos[codigoFinal] +
-            "!<br><br>" +
-            "🎟️ Ingresso: " +
-            codigoFinal;
-
-    } else {
-
-        resultado.innerHTML =
-            "❌ CÓDIGO INVÁLIDO!";
-    }
-}
-
-verificarIngresso();
-
-</script>
-
-</body>
-</html>
+    const resultado = document.getElementBy

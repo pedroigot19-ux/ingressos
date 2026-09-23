@@ -27,28 +27,9 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
-        input {
-            width: 90%;
-            padding: 12px;
-            margin: 15px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            background: #222;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
         #resultado {
             margin-top: 20px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
         }
     </style>
@@ -60,17 +41,9 @@
 
     <h1>🎟️ Entrada do Evento</h1>
 
-    <p>Digite o código do ingresso:</p>
-
-    <input type="text" id="codigo" placeholder="Ex: ING001">
-
-    <br>
-
-    <button onclick="validarIngresso()">
-        Validar ingresso
-    </button>
-
-    <div id="resultado"></div>
+    <div id="resultado">
+        Verificando ingresso...
+    </div>
 
 </div>
 
@@ -94,32 +67,34 @@ const ingressos = {
     "ING015": "Yhago da Silva Candal"
 };
 
-function validarIngresso() {
+function verificarIngresso() {
 
-    const codigo = document
-        .getElementById("codigo")
-        .value
-        .trim()
-        .toUpperCase();
+    const parametros = new URLSearchParams(window.location.search);
+
+    const codigo = parametros.get("codigo");
 
     const resultado = document.getElementById("resultado");
 
-    if (ingressos[codigo]) {
+    if (codigo && ingressos[codigo.toUpperCase()]) {
+
+        const codigoFinal = codigo.toUpperCase();
 
         resultado.innerHTML =
-            "✅ ENTRADA VÁLIDA!<br><br>" +
+            "✅ CÓDIGO VÁLIDO!<br><br>" +
             "🎉 Bem-vindo(a), " +
-            ingressos[codigo] +
+            ingressos[codigoFinal] +
             "!<br><br>" +
             "🎟️ Ingresso: " +
-            codigo;
+            codigoFinal;
 
     } else {
 
         resultado.innerHTML =
-            "❌ INGRESSO INVÁLIDO!";
+            "❌ CÓDIGO INVÁLIDO!";
     }
 }
+
+verificarIngresso();
 
 </script>
 

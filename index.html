@@ -31,6 +31,7 @@
             margin-top: 20px;
             font-size: 20px;
             font-weight: bold;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -47,18 +48,11 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 
 const SUPABASE_URL = "https://itloqxijliwxxrzxudnh.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY = "COLE_SUA_CHAVE_AQUI";
-
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
 
 
 const ingressos = {
@@ -66,24 +60,4 @@ const ingressos = {
     "ING002": "Anna Paula Halfed Duarte",
     "ING003": "Bruna dos Santos de Jesus",
     "ING004": "Emanuelly Garcia de Assis",
-    "ING005": "Gabriel Cestari Amorim",
-    "ING006": "João Pedro Rainha Pá",
-    "ING007": "Jullyanna Pereira da Silva Mauricio",
-    "ING008": "Kesia Mendes Marçal Alves",
-    "ING009": "Leandro Mota Teixeira",
-    "ING010": "Ludmila Cardoso Bento Perfeito",
-    "ING011": "Marcelo Rocha Ramalhete",
-    "ING012": "Natan Batalha Sevarolli",
-    "ING013": "Nayane Pereira de Souza",
-    "ING014": "Thays da Silva Souza",
-    "ING015": "Yhago da Silva Candal"
-};
-
-
-async function verificarIngresso() {
-
-    const parametros = new URLSearchParams(window.location.search);
-
-    const codigo = parametros.get("codigo");
-
-    const resultado = document.getElementBy
+    "

@@ -7,6 +7,8 @@
 
     <title>Vaticano - Controle</title>
 
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -26,21 +28,26 @@
         .caixa {
             background: white;
             width: 90%;
-            max-width: 420px;
-            padding: 30px;
+            max-width: 450px;
+            padding: 25px;
             border-radius: 18px;
             text-align: center;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
         h1 {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+        }
+
+        #leitor {
+            width: 100%;
         }
 
         #resultado {
             margin-top: 20px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
+            word-break: break-word;
         }
     </style>
 </head>
@@ -51,11 +58,43 @@
 
         <h1>🔐 Vaticano</h1>
 
+        <div id="leitor"></div>
+
         <div id="resultado">
-            Sistema de controle
+            📷 Aponte a câmera para o QR Code
         </div>
 
     </div>
+
+    <script>
+
+        function qrCodeLido(texto) {
+
+            document.getElementById("resultado").innerHTML =
+                "✅ QR CODE LIDO<br><br>" +
+                texto;
+
+        }
+
+        function erroLeitura(error) {
+            // Ignora erros enquanto procura o QR Code
+        }
+
+        const scanner = new Html5QrcodeScanner(
+            "leitor",
+            {
+                fps: 10,
+                qrbox: {
+                    width: 250,
+                    height: 250
+                }
+            },
+            false
+        );
+
+        scanner.render(qrCodeLido, erroLeitura);
+
+    </script>
 
 </body>
 

@@ -32,4 +32,70 @@
             padding: 25px;
             border-radius: 18px;
             text-align: center;
-            box-shadow: 0
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #leitor {
+            width: 100%;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="caixa">
+
+        <h1>🔐 Vaticano</h1>
+
+        <div id="leitor"></div>
+
+        <div id="resultado">
+            📷 Aponte a câmera para o QR Code
+        </div>
+
+    </div>
+
+    <script>
+
+        function qrCodeLido(texto) {
+
+            document.getElementById("resultado").innerHTML =
+                "✅ QR CODE LIDO<br><br>" +
+                texto;
+
+        }
+
+        function erroLeitura(error) {
+            // Ignora erros enquanto procura o QR Code
+        }
+
+        const scanner = new Html5QrcodeScanner(
+            "leitor",
+            {
+                fps: 10,
+                qrbox: {
+                    width: 250,
+                    height: 250
+                }
+            },
+            false
+        );
+
+        scanner.render(qrCodeLido, erroLeitura);
+
+    </script>
+
+</body>
+
+</html>

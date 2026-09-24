@@ -8,7 +8,6 @@
     <title>Vaticano - Controle</title>
 
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         * {
@@ -73,4 +72,160 @@
 
         <h1>🔐 Vaticano</h1>
 
-        <
+        <div id="leitor"></div>
+
+        <div id="resultado">
+            📷 Aponte a câmera para o QR Code
+        </div>
+
+    </div>
+
+    <script>
+
+        // ==============================
+        // CONFIGURAÇÃO DO SUPABASE
+        // ==============================
+
+        const SUPABASE_URL =
+            "https://itloqxijliwxxrzxudnh.supabase.co";
+
+        const SUPABASE_KEY =
+            "COLE_AQUI_SUA_CHAVE_PUBLICAVEL";
+
+
+        // ==============================
+        // DATA ATUAL
+        // ==============================
+
+        function obterDataAtual() {
+
+            const agora = new Date();
+
+            const ano = agora.getFullYear();
+            const mes = String(agora.getMonth() + 1).padStart(2, "0");
+            const dia = String(agora.getDate()).padStart(2, "0");
+
+            return `${ano}-${mes}-${dia}`;
+        }
+
+
+        // ==============================
+        // HORA ATUAL
+        // ==============================
+
+        function obterHorarioAtual() {
+
+            const agora = new Date();
+
+            const horas = String(agora.getHours()).padStart(2, "0");
+            const minutos = String(agora.getMinutes()).padStart(2, "0");
+            const segundos = String(agora.getSeconds()).padStart(2, "0");
+
+            return `${horas}:${minutos}:${segundos}`;
+        }
+
+
+        // ==============================
+        // QUANDO LER O QR
+        // ==============================
+
+        async function qrCodeLido(texto) {
+
+            const resultado = document.getElementById("resultado");
+
+            resultado.innerHTML = "⏳ Lendo ingresso...";
+
+
+            try {
+
+                // Exemplo:
+                // https://pedroigot19-ux.github.io/ingressos/?codigo=ING001
+
+                const url = new URL(texto);
+
+                const codigo = url.searchParams.get("codigo");
+
+
+                if (!codigo) {
+
+                    resultado.innerHTML = `
+                        <div class="erro">
+                            ❌ CÓDIGO NÃO ENCONTRADO
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                const codigoFinal = codigo.toUpperCase().trim();
+
+
+                resultado.innerHTML = `
+                    ⏳ Código encontrado:
+                    <strong>${codigoFinal}</strong>
+                    <br><br>
+                    Consultando...
+                `;
+
+
+                // ==============================
+                // CARREGA O SUPABASE SOMENTE AGORA
+                // ==============================
+
+                if (!window.supabase) {
+
+                    const script = document.createElement("script");
+
+                    script.src =
+                        "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+                    document.head.appendChild(script);
+
+                    await new Promise((resolve, reject) => {
+
+                        script.onload = resolve;
+
+                        script.onerror = reject;
+
+                    });
+                }
+
+
+                // ==============================
+                // CRIA CONEXÃO
+                // ==============================
+
+                const clienteSupabase =
+                    window.supabase.createClient(
+                        SUPABASE_URL,
+                        SUPABASE_KEY
+                    );
+
+
+                const dataHoje = obterDataAtual();
+                const horarioSaida = obterHorarioAtual();
+
+
+                // ==============================
+                // PROCURA A ENTRADA DE HOJE
+                // ==============================
+
+                const resposta = await clienteSupabase
+                    .from("presencas")
+                    .select("*")
+                    .eq("codigo", codigoFinal)
+                    .eq("data_presenca", dataHoje)
+                    .maybeSingle();
+
+
+                if (resposta.error) {
+
+                    console.error(resposta.error);
+
+                    resultado.innerHTML = `
+                        <div class="erro">
+                            ❌ ERRO AO CONSULTAR O BANCO
+                        </div>
+
+                        <div

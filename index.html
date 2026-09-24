@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +8,65 @@
     <title>Entrada do Evento</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+            margin: 0;
+            min-height: 100vh;
             font-family: Arial, sans-serif;
             background: #f2f2f2;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
         }
 
         .caixa {
             background: white;
             width: 90%;
-            max-width: 400px;
+            max-width: 420px;
             padding: 30px;
-            border-radius: 15px;
+            border-radius: 18px;
             text-align: center;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            margin-bottom: 25px;
         }
 
         #resultado {
             margin-top: 20px;
             font-size: 20px;
             font-weight: bold;
-            word-wrap: break-word;
+        }
+
+        .valido {
+            color: green;
+        }
+
+        .invalido {
+            color: red;
+        }
+
+        .bem-vindo {
+            margin-top: 15px;
+            font-size: 24px;
+            color: #111;
+        }
+
+        .nome {
+            margin-top: 10px;
+            font-size: 25px;
+            font-weight: bold;
+            color: #111;
+        }
+
+        .info {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
         }
     </style>
 </head>
@@ -50,14 +85,121 @@
 
 <script>
 
-const SUPABASE_URL = "https://itloqxijliwxxrzxudnh.supabase.co";
+    // =========================================
+    // CÓDIGOS E NOMES DOS INGRESSOS
+    // =========================================
 
-const SUPABASE_PUBLISHABLE_KEY = "COLE_SUA_CHAVE_AQUI";
+    const ingressos = {
+
+        "ING001": "Aline Vieira Fernandes",
+        "ING002": "Anna Paula Halfed Duarte",
+        "ING003": "Bruna dos Santos de Jesus",
+        "ING004": "Emanuelly Garcia de Assis",
+        "ING005": "Gabriel Cestari Amorim",
+        "ING006": "João Pedro Rainha Pá",
+        "ING007": "Jullyanna Pereira da Silva Mauricio",
+        "ING008": "Kesia Mendes Marçal Alves",
+        "ING009": "Leandro Mota Teixeira",
+        "ING010": "Ludmila Cardoso Bento Perfeito",
+        "ING011": "Marcelo Rocha Ramalhete",
+        "ING012": "Natan Batalha Sevarolli",
+        "ING013": "Nayane Pereira de Souza",
+        "ING014": "Thays da Silva Souza",
+        "ING015": "Yhago da Silva Candal"
+
+    };
 
 
-const ingressos = {
-    "ING001": "Aline Vieira Fernandes",
-    "ING002": "Anna Paula Halfed Duarte",
-    "ING003": "Bruna dos Santos de Jesus",
-    "ING004": "Emanuelly Garcia de Assis",
-    "
+    // =========================================
+    // PEGA O CÓDIGO DO QR CODE
+    // =========================================
+
+    const parametros = new URLSearchParams(
+        window.location.search
+    );
+
+    let codigo = parametros.get("codigo");
+
+
+    // =========================================
+    // RESULTADO
+    // =========================================
+
+    const resultado =
+        document.getElementById("resultado");
+
+
+    // =========================================
+    // VERIFICAÇÃO
+    // =========================================
+
+    if (!codigo) {
+
+        resultado.innerHTML = `
+            <div class="invalido">
+                ⚠️ NENHUM CÓDIGO INFORMADO
+            </div>
+        `;
+
+    } else {
+
+        codigo = codigo.toUpperCase().trim();
+
+
+        // =====================================
+        // CÓDIGO VÁLIDO
+        // =====================================
+
+        if (ingressos[codigo]) {
+
+            const nome = ingressos[codigo];
+
+            resultado.innerHTML = `
+
+                <div class="valido">
+                    ✅ CÓDIGO VÁLIDO
+                </div>
+
+                <div class="bem-vindo">
+                    🎉 BEM-VINDO!
+                </div>
+
+                <div class="nome">
+                    ${nome}
+                </div>
+
+                <div class="info">
+                    Ingresso:
+                    <strong>${codigo}</strong>
+                </div>
+
+            `;
+
+
+        // =====================================
+        // CÓDIGO INVÁLIDO
+        // =====================================
+
+        } else {
+
+            resultado.innerHTML = `
+
+                <div class="invalido">
+                    ❌ CÓDIGO INVÁLIDO
+                </div>
+
+                <div class="info">
+                    Código: ${codigo}
+                </div>
+
+            `;
+
+        }
+
+    }
+
+</script>
+
+</body>
+
+</html>

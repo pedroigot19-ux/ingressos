@@ -1,0 +1,522 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Controle Vaticano</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+    }
+
+    .caixa {
+        background: white;
+        width: 100%;
+        max-width: 1100px;
+        margin: auto;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .login {
+        max-width: 400px;
+        margin: 80px auto;
+        text-align: center;
+    }
+
+    .login input {
+        width: 100%;
+        padding: 14px;
+        margin: 15px 0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .login button {
+        width: 100%;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #111;
+        color: white;
+        font-size: 16px;
+    }
+
+    .erro {
+        color: red;
+        font-weight: bold;
+        margin-top: 12px;
+    }
+
+    .tabela {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 750px;
+    }
+
+    th,
+    td {
+        padding: 14px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background: #f5f5f5;
+    }
+
+    .presente {
+        color: green;
+        font-weight: bold;
+    }
+
+    .saiu {
+        color: #555;
+        font-weight: bold;
+    }
+
+    button {
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #111;
+        color: white;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+
+    button:disabled {
+        background: #aaa;
+        cursor: default;
+    }
+
+    .mensagem {
+        text-align: center;
+        padding: 20px;
+        font-weight: bold;
+    }
+
+    #controle {
+        display: none;
+    }
+</style>
+
+</head><body><div class="caixa"><div id="login" class="login">
+
+    <h1>🔐 Controle Vaticano</h1>
+
+    <p>Digite a senha para entrar.</p>
+
+    <input
+        type="password"
+        id="senha"
+        placeholder="Senha"
+    >
+
+    <button onclick="entrar()">
+        Entrar
+    </button>
+
+    <div id="erro" class="erro"></div>
+
+</div>
+
+
+<div id="controle">
+
+    <h1>🔐 Controle Vaticano</h1>
+
+    <div class="tabela">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Nome</th>
+                    <th>Código</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="lista">
+
+                <tr>
+                    <td colspan="6" class="mensagem">
+                        Carregando registros...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</div><script>
+
+const SENHA =
+    "w_hGXbDjJ/UQ3LV";
+
+
+const SUPABASE_URL =
+    "https://itloqxijliwxxrzxudnh.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_0r7wj8O8cFKFT2yErvxL8A_AdW6bNL4";
+
+
+const lista =
+    document.getElementById("lista");
+
+
+function entrar() {
+
+    const senha =
+        document.getElementById("senha").value;
+
+    const erro =
+        document.getElementById("erro");
+
+
+    if (senha === SENHA) {
+
+        document.getElementById("login").style.display =
+            "none";
+
+        document.getElementById("controle").style.display =
+            "block";
+
+        carregarRegistros();
+
+    } else {
+
+        erro.textContent =
+            "❌ Senha incorreta.";
+
+    }
+
+}
+
+
+document.getElementById("senha").addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            entrar();
+        }
+
+    }
+);
+
+
+function escaparHTML(texto) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        texto ?? "";
+
+    return div.innerHTML;
+
+}
+
+
+function formatarData(data) {
+
+    if (!data) {
+        return "—";
+    }
+
+    return new Date(data).toLocaleString(
+        "pt-BR",
+        {
+            dateStyle: "short",
+            timeStyle: "short"
+        }
+    );
+
+}
+
+
+async function carregarRegistros() {
+
+    try {
+
+        const resposta =
+            await fetch(
+
+                SUPABASE_URL +
+                "/rest/v1/presencas_?select=id,entrada,codigo,nome,saida&order=entrada.asc",
+
+                {
+
+                    method: "GET",
+
+                    headers: {
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_KEY
+
+                    }
+
+                }
+
+            );
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                await resposta.text()
+            );
+
+        }
+
+
+        const registros =
+            await resposta.json();
+
+
+        lista.innerHTML = "";
+
+
+        if (registros.length === 0) {
+
+            lista.innerHTML = `
+
+                <tr>
+
+                    <td colspan="6"
+                        class="mensagem">
+
+                        Nenhuma entrada registrada ainda.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        registros.forEach(registro => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            const presente =
+                !registro.saida;
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${escaparHTML(registro.nome)}
+                </td>
+
+                <td>
+                    ${escaparHTML(registro.codigo)}
+                </td>
+
+                <td>
+                    ${formatarData(registro.entrada)}
+                </td>
+
+                <td>
+                    ${formatarData(registro.saida)}
+                </td>
+
+                <td class="${
+                    presente
+                    ? "presente"
+                    : "saiu"
+                }">
+
+                    ${
+                        presente
+                        ? "🟢 Presente"
+                        : "⚫ Saiu"
+                    }
+
+                </td>
+
+                <td>
+
+                    ${
+                        presente
+
+                        ? `
+
+                            <button
+                                onclick="registrarSaida(${registro.id})">
+
+                                Registrar saída
+
+                            </button>
+
+                        `
+
+                        : `
+
+                            <button disabled>
+
+                                Saída registrada
+
+                            </button>
+
+                        `
+                    }
+
+                </td>
+
+            `;
+
+
+            lista.appendChild(tr);
+
+        });
+
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        lista.innerHTML = `
+
+            <tr>
+
+                <td colspan="6"
+                    class="mensagem">
+
+                    ❌ Erro ao carregar os registros.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+async function registrarSaida(id) {
+
+    const confirmar =
+        confirm(
+            "Registrar a saída desta pessoa?"
+        );
+
+
+    if (!confirmar) {
+        return;
+    }
+
+
+    try {
+
+        const resposta =
+            await fetch(
+
+                SUPABASE_URL +
+                "/rest/v1/presencas_?id=eq." +
+                id,
+
+                {
+
+                    method: "PATCH",
+
+                    headers: {
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_KEY,
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Prefer":
+                            "return=minimal"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        saida:
+                            new Date().toISOString()
+
+                    })
+
+                }
+
+            );
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                await resposta.text()
+            );
+
+        }
+
+
+        await carregarRegistros();
+
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert(
+            "Não foi possível registrar a saída."
+        );
+
+    }
+
+}
+
+</script></body></html>
